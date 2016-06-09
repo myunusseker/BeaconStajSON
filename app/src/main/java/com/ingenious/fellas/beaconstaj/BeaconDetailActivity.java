@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
@@ -53,10 +54,13 @@ public class BeaconDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(BeaconDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(BeaconDetailFragment.ARG_ITEM_ID));
+            arguments.putString(BeaconDetailFragment.ARG_ITEM_NAME,
+                    getIntent().getStringExtra(BeaconDetailFragment.ARG_ITEM_NAME));
+            arguments.putString(BeaconDetailFragment.ARG_ITEM_MAC,
+                    getIntent().getStringExtra(BeaconDetailFragment.ARG_ITEM_MAC));
             BeaconDetailFragment fragment = new BeaconDetailFragment();
             fragment.setArguments(arguments);
+
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.beacon_detail_container, fragment)
                     .commit();
