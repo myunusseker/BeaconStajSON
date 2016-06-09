@@ -3,7 +3,9 @@ package com.ingenious.fellas.beaconstaj;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -29,6 +31,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.ingenious.fellas.beaconstaj.Classes.Globals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -231,6 +235,15 @@ public class LoginActivity extends AppCompatActivity{
             showProgress(false);
 
             if (success) {
+                Globals.email = mEmailView.getText().toString();
+                Globals.password = mEmailView.getText().toString();
+
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("email", Globals.email);
+                editor.putString("password", Globals.password);
+                editor.commit();
+
                 Intent intent = new Intent(LoginActivity.this, BeaconListActivity.class);
                 startActivity(intent);
             } else {
