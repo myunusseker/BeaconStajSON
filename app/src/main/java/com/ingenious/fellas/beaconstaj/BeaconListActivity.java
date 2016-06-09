@@ -54,6 +54,7 @@ public class BeaconListActivity extends AppCompatActivity {
             }
         });
 
+
         View recyclerView = findViewById(R.id.beacon_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
