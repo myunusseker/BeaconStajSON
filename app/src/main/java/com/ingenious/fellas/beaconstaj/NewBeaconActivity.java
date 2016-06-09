@@ -34,7 +34,7 @@ public class NewBeaconActivity extends AppCompatActivity {
 
     static boolean startBeaconSearch = true;
     private BluetoothAdapter BTAdapter;
-    public static List<Beacon> beacons = new ArrayList<>();
+    List<Beacon> beacons = new ArrayList<>();
 
     private static final String TAG = "MEHMET";
 
@@ -73,10 +73,9 @@ public class NewBeaconActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_beacon);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        fab = (FloatingActionButton) findViewById(R.id.newfab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
