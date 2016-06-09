@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.ingenious.fellas.beaconstaj.Classes.Beacon;
 import com.ingenious.fellas.beaconstaj.dummy.DummyContent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,6 +38,7 @@ public class BeaconListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
+    private ArrayList<Beacon> dummyBeacons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,10 @@ public class BeaconListActivity extends AppCompatActivity {
             }
         });
 
+        dummyBeacons = new ArrayList<>();
+        for(int i=1;i<=20;i++){
+            dummyBeacons.add(new Beacon("Name " + i, "Mac address " + i, i ));
+        }
 
         View recyclerView = findViewById(R.id.beacon_list);
         assert recyclerView != null;
@@ -69,18 +76,23 @@ public class BeaconListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
+        //recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(dummyBeacons));
     }
 
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<DummyContent.DummyItem> mValues;
+        //private final List<DummyContent.DummyItem> mValues;
+        private final List<Beacon> mBeacons;
 
-        public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items) {
+        /*public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items) {
             mValues = items;
-        }
+        }*/
 
+        public SimpleItemRecyclerViewAdapter(List<Beacon> items) {
+            mBeacons = items;
+        }
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
@@ -90,26 +102,28 @@ public class BeaconListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mItem = mValues.get(position);
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            holder.mItem = mBeacons.get(position);
+            holder.mIdView.setText(mBeacons.get(position).getName());
+            holder.mContentView.setText(mBeacons.get(position).getAddress());
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
-                        arguments.putString(BeaconDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        arguments.putString(BeaconDetailFragment.ARG_ITEM_NAME, holder.mItem.getName());
+                        arguments.putString(BeaconDetailFragment.ARG_ITEM_MAC, holder.mItem.getAddress());
                         BeaconDetailFragment fragment = new BeaconDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.beacon_detail_container, fragment)
                                 .commit();
                     } else {
+                        Log.i("asdf", holder.mItem.getName() + " " + holder.mItem.getAddress());
                         Context context = v.getContext();
                         Intent intent = new Intent(context, BeaconDetailActivity.class);
-                        intent.putExtra(BeaconDetailFragment.ARG_ITEM_ID, holder.mItem.id);
-
+                        intent.putExtra(BeaconDetailFragment.ARG_ITEM_NAME, holder.mItem.getName());
+                        intent.putExtra(BeaconDetailFragment.ARG_ITEM_MAC, holder.mItem.getAddress());
                         context.startActivity(intent);
                     }
                 }
@@ -118,14 +132,14 @@ public class BeaconListActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return mValues.size();
+            return mBeacons.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
             public final TextView mIdView;
             public final TextView mContentView;
-            public DummyContent.DummyItem mItem;
+            public Beacon mItem;
 
             public ViewHolder(View view) {
                 super(view);
