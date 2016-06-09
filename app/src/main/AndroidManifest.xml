@@ -26,7 +26,7 @@
         <activity
             android:name=".BeaconListActivity"
             android:label="@string/title_beacon_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".BeaconDetailActivity"
             android:label="@string/title_beacon_detail"
@@ -36,6 +36,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ingenious.fellas.beaconstaj.BeaconListActivity" />
         </activity>
+        <activity android:name=".NewBeaconActivity"></activity>
     </application>
 
 </manifest>

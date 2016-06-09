@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import com.ingenious.fellas.beaconstaj.Classes.Beacon;
 import com.ingenious.fellas.beaconstaj.dummy.DummyContent;
 
 import java.util.List;
@@ -49,8 +50,7 @@ public class BeaconListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivity(new Intent(BeaconListActivity.this, NewBeaconActivity.class));
             }
         });
 
@@ -142,6 +142,5 @@ public class BeaconListActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        ;
     }
 }
