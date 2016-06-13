@@ -20,6 +20,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ingenious.fellas.beaconstaj.Classes.Globals;
 import com.ingenious.fellas.beaconstaj.R;
@@ -121,10 +122,12 @@ public class LoginActivity extends AppCompatActivity{
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
+
             focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
@@ -221,14 +224,13 @@ public class LoginActivity extends AppCompatActivity{
 
             if (success) {
                 Globals.email = mEmailView.getText().toString();
-                Globals.password = mEmailView.getText().toString();
-
-                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                Globals.password = mPasswordView.getText().toString();
+                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("email", Globals.email);
                 editor.putString("password", Globals.password);
                 editor.commit();
-
+                Toast.makeText(LoginActivity.this, "Welcome " + Globals.email, Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(LoginActivity.this, BeaconListActivity.class);
                 startActivity(intent);
             } else {

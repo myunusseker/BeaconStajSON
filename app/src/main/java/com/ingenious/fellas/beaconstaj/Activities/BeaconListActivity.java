@@ -2,6 +2,7 @@ package com.ingenious.fellas.beaconstaj.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,12 +11,15 @@ import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 
 import com.ingenious.fellas.beaconstaj.Classes.Beacon;
+import com.ingenious.fellas.beaconstaj.Classes.Globals;
 import com.ingenious.fellas.beaconstaj.Fragments.BeaconDetailFragment;
 import com.ingenious.fellas.beaconstaj.R;
 
@@ -45,8 +49,9 @@ public class BeaconListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_beacon_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // TODO: Burasi username olcak sonradan
+        toolbar.setTitle(Globals.email+"'s Beacons");
         setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -151,5 +156,29 @@ public class BeaconListActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.logout){
+            SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("UserPreferences",Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.clear();
+            editor.commit();
+            Intent intent = new Intent(BeaconListActivity.this , MainActivity.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
