@@ -8,8 +8,7 @@ import android.content.SharedPreferences;
  */
 public class Globals {
     public static String email, username, password;
-
-    String TAG = "asdf";
+    public static String TAG = "asdf";
 
     public static void initialize(Context applicationContext) {
         SharedPreferences sharedPref = applicationContext.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
