@@ -5,7 +5,6 @@ package com.ingenious.fellas.beaconstaj.Classes;
  */
 public class Globals {
     public static String email, username, password;
-
-    String TAG = "asdf";
+    public static String TAG = "asdf";
 
 }
