@@ -17,9 +17,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.ingenious.fellas.beaconstaj.Classes.Beacon;
 import com.ingenious.fellas.beaconstaj.Classes.NewBeaconAdapter;
@@ -32,8 +29,6 @@ public class NewBeaconActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private NewBeaconAdapter mAdapter;
-
-    static boolean startBeaconSearch = true;
     private BluetoothAdapter BTAdapter;
     List<Beacon> beacons = new ArrayList<>();
 
@@ -73,9 +68,8 @@ public class NewBeaconActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_beacon);
 
-
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mAdapter = new NewBeaconAdapter(beacons);
+        mAdapter = new NewBeaconAdapter(getSupportFragmentManager(),beacons);
         //recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -108,6 +102,5 @@ public class NewBeaconActivity extends AppCompatActivity {
         this.registerReceiver(bReciever, bluetoothFilter);
 
         t.start();
-
     }
 }
