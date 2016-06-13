@@ -66,25 +66,11 @@ public class NewBeaconActivity extends AppCompatActivity {
             }
         }
     };
-    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_beacon);
-
-
-
-        fab = (FloatingActionButton) findViewById(R.id.newfab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-
 
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -120,21 +106,7 @@ public class NewBeaconActivity extends AppCompatActivity {
         final IntentFilter bluetoothFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         this.registerReceiver(bReciever, bluetoothFilter);
 
+        t.start();
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(startBeaconSearch) {
-                    fab.setImageResource(android.R.drawable.ic_media_pause);
-                    registerReceiver(bReciever, bluetoothFilter);
-                    t.start();
-                }
-                else {
-                    fab.setImageResource(android.R.drawable.ic_media_play);
-                    unregisterReceiver(bReciever);
-                }
-                startBeaconSearch = !startBeaconSearch;
-            }
-        });
     }
 }
