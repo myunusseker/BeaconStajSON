@@ -16,7 +16,6 @@ public class NewBeaconAdapter extends RecyclerView.Adapter<NewBeaconAdapter.MyVi
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView address, distance, rssi;
-
         public MyViewHolder(View view) {
             super(view);
             address = (TextView) view.findViewById(R.id.address);
