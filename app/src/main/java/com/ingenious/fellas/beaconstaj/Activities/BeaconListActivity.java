@@ -82,12 +82,7 @@ public class BeaconListActivity extends AppCompatActivity {
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        //private final List<DummyContent.DummyItem> mValues;
         private final List<Beacon> mBeacons;
-
-        /*public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items) {
-            mValues = items;
-        }*/
 
         public SimpleItemRecyclerViewAdapter(List<Beacon> items) {
             mBeacons = items;

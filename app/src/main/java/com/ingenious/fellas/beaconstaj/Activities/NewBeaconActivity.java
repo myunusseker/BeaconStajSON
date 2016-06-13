@@ -17,6 +17,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.ingenious.fellas.beaconstaj.Classes.Beacon;
 import com.ingenious.fellas.beaconstaj.Classes.NewBeaconAdapter;
@@ -29,8 +32,11 @@ public class NewBeaconActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private NewBeaconAdapter mAdapter;
+
+    volatile Thread t;
     private BluetoothAdapter BTAdapter;
     List<Beacon> beacons = new ArrayList<>();
+    static boolean interrupt = false;
 
     private static final String TAG = "MEHMET";
 
@@ -68,6 +74,7 @@ public class NewBeaconActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_beacon);
 
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mAdapter = new NewBeaconAdapter(getSupportFragmentManager(),beacons);
         //recyclerView.setHasFixedSize(true);
@@ -76,13 +83,14 @@ public class NewBeaconActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
-        final Thread t = new Thread() {
+        interrupt = false;
+         t = new Thread() {
 
             @Override
             public void run() {
                 try {
-                    while (!isInterrupted()) {
-                        Thread.sleep(100);
+                    while (!isInterrupted() && !interrupt) {
+                        Thread.sleep(300);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -102,5 +110,12 @@ public class NewBeaconActivity extends AppCompatActivity {
         this.registerReceiver(bReciever, bluetoothFilter);
 
         t.start();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        interrupt = true;
     }
 }
