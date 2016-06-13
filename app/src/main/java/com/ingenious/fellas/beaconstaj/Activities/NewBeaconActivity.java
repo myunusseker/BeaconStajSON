@@ -30,6 +30,8 @@ public class NewBeaconActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private NewBeaconAdapter mAdapter;
     private BluetoothAdapter BTAdapter;
+    private Thread t;
+    private boolean searchForBeacons = false;
     List<Beacon> beacons = new ArrayList<>();
 
     private static final String TAG = "MEHMET";
@@ -75,14 +77,14 @@ public class NewBeaconActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
-
-        final Thread t = new Thread() {
+        searchForBeacons = true;
+        t = new Thread() {
 
             @Override
             public void run() {
                 try {
                     while (!isInterrupted()) {
-                        Thread.sleep(100);
+                        Thread.sleep(1000);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -102,5 +104,13 @@ public class NewBeaconActivity extends AppCompatActivity {
         this.registerReceiver(bReciever, bluetoothFilter);
 
         t.start();
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.unregisterReceiver(bReciever);
+        t.interrupt();
+        searchForBeacons = false;
+        this.finish();
     }
 }
