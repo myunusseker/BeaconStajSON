@@ -95,6 +95,25 @@ public class NewBeaconActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
+        final Thread t = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(100);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.i(TAG,"BT run");
+                                BTAdapter.startDiscovery();
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
 
         BTAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -108,12 +127,11 @@ public class NewBeaconActivity extends AppCompatActivity {
                 if(startBeaconSearch) {
                     fab.setImageResource(android.R.drawable.ic_media_pause);
                     registerReceiver(bReciever, bluetoothFilter);
-                    BTAdapter.startDiscovery();
+                    t.start();
                 }
                 else {
                     fab.setImageResource(android.R.drawable.ic_media_play);
                     unregisterReceiver(bReciever);
-                    BTAdapter.cancelDiscovery();
                 }
                 startBeaconSearch = !startBeaconSearch;
             }
