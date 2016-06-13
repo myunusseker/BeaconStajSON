@@ -1,4 +1,4 @@
-package com.ingenious.fellas.beaconstaj;
+package com.ingenious.fellas.beaconstaj.Activities;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.ingenious.fellas.beaconstaj.Classes.Beacon;
 import com.ingenious.fellas.beaconstaj.Classes.NewBeaconAdapter;
+import com.ingenious.fellas.beaconstaj.R;
 
 import java.util.ArrayList;
 import java.util.List;

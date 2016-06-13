@@ -1,4 +1,4 @@
-package com.ingenious.fellas.beaconstaj;
+package com.ingenious.fellas.beaconstaj.Fragments;
 
 import android.app.Activity;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -10,8 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.ingenious.fellas.beaconstaj.Activities.BeaconDetailActivity;
+import com.ingenious.fellas.beaconstaj.Activities.BeaconListActivity;
 import com.ingenious.fellas.beaconstaj.Classes.Beacon;
-import com.ingenious.fellas.beaconstaj.dummy.DummyContent;
+import com.ingenious.fellas.beaconstaj.R;
 
 /**
  * A fragment representing a single Beacon detail screen.

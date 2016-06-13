@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,22 +23,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".Activities.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
-            android:name=".BeaconListActivity"
+            android:name=".Activities.BeaconListActivity"
             android:label="@string/title_beacon_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".BeaconDetailActivity"
+            android:name=".Activities.BeaconDetailActivity"
             android:label="@string/title_beacon_detail"
-            android:parentActivityName=".BeaconListActivity"
+            android:parentActivityName=".Activities.BeaconListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ingenious.fellas.beaconstaj.BeaconListActivity" />
+                android:value=".Activities.BeaconListActivity" />
         </activity>
-        <activity android:name=".NewBeaconActivity"></activity>
+        <activity android:name=".Activities.NewBeaconActivity"></activity>
     </application>
 
 </manifest>

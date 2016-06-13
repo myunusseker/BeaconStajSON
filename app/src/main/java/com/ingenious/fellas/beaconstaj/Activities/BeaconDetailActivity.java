@@ -1,15 +1,17 @@
-package com.ingenious.fellas.beaconstaj;
+package com.ingenious.fellas.beaconstaj.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+
+import com.ingenious.fellas.beaconstaj.Fragments.BeaconDetailFragment;
+import com.ingenious.fellas.beaconstaj.R;
 
 /**
  * An activity representing a single Beacon detail screen. This
