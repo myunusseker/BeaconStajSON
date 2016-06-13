@@ -116,5 +116,6 @@ public class NewBeaconActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         interrupt = true;
+        this.unregisterReceiver(bReciever);
     }
 }
