@@ -13,7 +13,6 @@ public class Globals {
     public static void initialize(Context applicationContext) {
         SharedPreferences sharedPref = applicationContext.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
         email = sharedPref.getString("email","nullUser");
-        username = sharedPref.getString("username","nullUser");
         password = sharedPref.getString("password","nullUser");
     }
 }
