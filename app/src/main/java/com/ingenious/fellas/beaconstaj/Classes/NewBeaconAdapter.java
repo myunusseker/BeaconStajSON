@@ -2,6 +2,7 @@ package com.ingenious.fellas.beaconstaj.Classes;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -47,15 +48,18 @@ public class NewBeaconAdapter extends RecyclerView.Adapter<NewBeaconAdapter.MyVi
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        Beacon beacon = beaconList.get(position);
+        final Beacon beacon = beaconList.get(position);
         holder.address.setText(beacon.getAddress());
         holder.rssi.setText(Integer.toString(beacon.getRssi()));
         holder.distance.setText(beacon.getDistance());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("mac", beacon.getAddress());
+
                 NewBeaconAddFragment dialog = new NewBeaconAddFragment();
-                Beacon selected = beaconList.get(position);
+                dialog.setArguments(bundle);
                 dialog.show(fragmentManager,"dialog");
             }
         });

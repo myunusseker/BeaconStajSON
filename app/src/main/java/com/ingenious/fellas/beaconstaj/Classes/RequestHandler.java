@@ -41,20 +41,20 @@ public class RequestHandler {
             OutputStream os = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(os, "UTF-8"));
-            Log.i("asdf","post string -> " + getPostDataString(postDataParams));
+            Log.i("asdf", "post string -> " + getPostDataString(postDataParams));
             writer.write(getPostDataString(postDataParams));
 
             writer.flush();
             writer.close();
             os.close();
             int responseCode = conn.getResponseCode();
+            Log.i(Globals.TAG,String.valueOf(responseCode));
 
-            if (responseCode == HttpsURLConnection.HTTP_OK) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                response = br.readLine();
-            } else {
-                response = "Error Registering";
-            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            response = br.readLine();
+            Log.i("asdf","response -> " + response);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

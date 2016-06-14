@@ -36,7 +36,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.BeaconListActivity" />
         </activity>
-        <activity android:name=".Activities.NewBeaconActivity"></activity>
+        <activity android:name=".Activities.NewBeaconActivity" />
+        <activity
+            android:name=".Activities.Signup"
+            android:label="@string/title_activity_signup"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

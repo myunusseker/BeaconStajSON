@@ -71,6 +71,17 @@
                 android:text="LOG IN"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/signup_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:text="Click to sign up"
+                android:layout_marginTop="30dp"
+                />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

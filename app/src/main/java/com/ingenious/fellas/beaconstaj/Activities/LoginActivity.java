@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,17 +34,9 @@ import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity{
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo:hello", "bar@example.com:world"
-    };
-
     private UserLoginTask mAuthTask = null;
 
-    private TextView mUsernameView;
+    private TextView mUsernameView, mSignup;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
@@ -52,6 +45,8 @@ public class LoginActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mSignup = (TextView) findViewById(R.id.signup_text);
         mUsernameView = (TextView) findViewById(R.id.username);
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -62,6 +57,13 @@ public class LoginActivity extends AppCompatActivity{
                     return true;
                 }
                 return false;
+            }
+        });
+
+        mSignup.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, Signup.class));
             }
         });
 
@@ -173,6 +175,11 @@ public class LoginActivity extends AppCompatActivity{
         }
     }
 
+    @Override
+    public void onBackPressed() {
+
+    }
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -199,11 +206,12 @@ public class LoginActivity extends AppCompatActivity{
 
         @Override
         protected void onPostExecute(final JSONObject result) {
+
             mAuthTask = null;
             showProgress(false);
 
             try {
-                if (result.getInt("status") == 200) {
+                if (result.getString("status_message").equals("success")) {
                     JSONObject data = (JSONObject) result.get("data");
                     Globals.username = data.getString("username");
                     Globals.password = data.getString("password");
@@ -222,6 +230,7 @@ public class LoginActivity extends AppCompatActivity{
                     Intent intent = new Intent(LoginActivity.this, BeaconListActivity.class);
                     startActivity(intent);
                 } else {
+                    Log.i(Globals.TAG, "sfd" + result.getString("status_message"));
                     mPasswordView.setError(result.getString("status_message"));
                     mPasswordView.requestFocus();
                 }
@@ -235,6 +244,7 @@ public class LoginActivity extends AppCompatActivity{
             mAuthTask = null;
             showProgress(false);
         }
+
     }
 }
 

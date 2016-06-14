@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
  */
 public class Globals {
     public static String email, username, password ,namesurname;
-    public static String TAG = "asdf";
+    public static String TAG = "asdf", URL = "http://104.236.17.172/";
     public static int id;
 
     public static void initialize(Context applicationContext) {
