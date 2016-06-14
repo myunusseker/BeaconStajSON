@@ -3,6 +3,7 @@ package com.ingenious.fellas.beaconstaj.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -20,10 +21,16 @@ import android.widget.TextView;
 
 import com.ingenious.fellas.beaconstaj.Classes.Beacon;
 import com.ingenious.fellas.beaconstaj.Classes.Globals;
+import com.ingenious.fellas.beaconstaj.Classes.RequestHandler;
 import com.ingenious.fellas.beaconstaj.Fragments.BeaconDetailFragment;
 import com.ingenious.fellas.beaconstaj.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -41,7 +48,8 @@ public class BeaconListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
-    private ArrayList<Beacon> dummyBeacons;
+    private ArrayList<Beacon> Beacons;
+    private View recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +69,12 @@ public class BeaconListActivity extends AppCompatActivity {
             }
         });
 
-        dummyBeacons = new ArrayList<>();
+        Beacons = new ArrayList<>();
         for(int i=1;i<=20;i++){
-            dummyBeacons.add(new Beacon("Name " + i, "Mac address " + i, i ));
+            Beacons.add(new Beacon("Name " + i, "Mac address " + i, i ));
         }
 
-        View recyclerView = findViewById(R.id.beacon_list);
+        recyclerView = findViewById(R.id.beacon_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
 
@@ -77,11 +85,13 @@ public class BeaconListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
+
+        new getBeaconsTask().execute();
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         //recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(dummyBeacons));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Beacons));
     }
 
     public class SimpleItemRecyclerViewAdapter
@@ -180,5 +190,46 @@ public class BeaconListActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public class getBeaconsTask extends AsyncTask<Void, Void, JSONArray> {
+
+        @Override
+        protected JSONArray doInBackground(Void... params) {
+            HashMap<String,String> h = new HashMap<>();
+            h.put("user_id", String.valueOf(Globals.id));
+            JSONObject response = RequestHandler.sendPostRequest(Globals.URL + "getbeacons.php", h);
+            try {
+                Log.i(Globals.TAG, response.getString("status_message"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.i(Globals.TAG, "response'u alamadik");
+            }
+
+            JSONArray arr = null;
+            try {
+                arr = response.getJSONArray("data");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return arr;
+        }
+
+        @Override
+        protected void onPostExecute(JSONArray jsonArray) {
+            if(jsonArray == null) return;
+            Beacons = new ArrayList<>();
+            for (int i=0;i<jsonArray.length();i++){
+                try {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    Beacons.add(new Beacon(jsonObject.getString("beacon_name"),
+                            jsonObject.getString("mac"), 0));
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            setupRecyclerView((RecyclerView) recyclerView);
+        }
     }
 }

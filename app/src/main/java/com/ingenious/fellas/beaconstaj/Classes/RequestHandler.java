@@ -50,6 +50,9 @@ public class RequestHandler {
             int responseCode = conn.getResponseCode();
             Log.i(Globals.TAG,String.valueOf(responseCode));
 
+            if(responseCode != HttpURLConnection.HTTP_OK){
+                Log.i(Globals.TAG, String.valueOf(responseCode));
+            }
 
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             response = br.readLine();

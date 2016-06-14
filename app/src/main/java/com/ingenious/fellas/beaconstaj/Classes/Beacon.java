@@ -6,6 +6,7 @@ public class Beacon {
     private int rssi;
     private double accuracy;
     private String distance;
+    private int id;
     public static final int TXPOWER = -55;
 
     public Beacon(String name, String address, int rssi) {
@@ -15,6 +16,7 @@ public class Beacon {
         this.setAccuracy();
         this.setDistance();
     }
+
 
     public String getName() {
         return name;
