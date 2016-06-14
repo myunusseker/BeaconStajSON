@@ -23,7 +23,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ingenious.fellas.beaconstaj.Classes.Globals;
+import com.ingenious.fellas.beaconstaj.Classes.RequestHandler;
 import com.ingenious.fellas.beaconstaj.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity{
 
@@ -171,58 +177,56 @@ public class LoginActivity extends AppCompatActivity{
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, JSONObject> {
 
         private final String mUsername;
         private final String mPassword;
 
-        UserLoginTask(String email, String password) {
-            mUsername = email;
+        UserLoginTask(String username, String password) {
+            mUsername = username;
             mPassword = password;
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected JSONObject doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mUsername)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
+            HashMap<String,String> h = new HashMap<String,String>();
+            h.put("username",mUsername);
+            h.put("password",mPassword);
+            return RequestHandler.sendPostRequest("http://104.236.17.172/login.php",h);
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final JSONObject result) {
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
-                Globals.username = mUsernameView.getText().toString();
-                Globals.password = mPasswordView.getText().toString();
-                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString("username", Globals.username);
-                editor.putString("password", Globals.password);
-                editor.commit();
-                Toast.makeText(LoginActivity.this, "Welcome " + Globals.email, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(LoginActivity.this, BeaconListActivity.class);
-                startActivity(intent);
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+            try {
+                if (result.getInt("status") == 200) {
+                    JSONObject data = (JSONObject) result.get("data");
+                    Globals.username = data.getString("username");
+                    Globals.password = data.getString("password");
+                    Globals.namesurname = data.getString("name_surname");
+                    Globals.email = data.getString("email");
+                    Globals.id = data.getInt("user_id");
+                    SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("username", Globals.username);
+                    editor.putString("password", Globals.password);
+                    editor.putString("email", Globals.email);
+                    editor.putString("namesurname", Globals.namesurname);
+                    editor.putInt("id",Globals.id);
+                    editor.commit();
+                    Toast.makeText(LoginActivity.this, "Welcome " + Globals.namesurname, Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(LoginActivity.this, BeaconListActivity.class);
+                    startActivity(intent);
+                } else {
+                    mPasswordView.setError(result.getString("status_message"));
+                    mPasswordView.requestFocus();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
 

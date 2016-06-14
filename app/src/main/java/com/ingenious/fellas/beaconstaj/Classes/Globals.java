@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 public class Globals {
     public static String email, username, password ,namesurname;
     public static String TAG = "asdf";
+    public static int id;
 
     public static void initialize(Context applicationContext) {
         SharedPreferences sharedPref = applicationContext.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
@@ -16,5 +17,6 @@ public class Globals {
         username = sharedPref.getString("username","nullUser");
         password = sharedPref.getString("password","nullUser");
         namesurname = sharedPref.getString("namesurname","nullUser");
+        id = sharedPref.getInt("id",-1);
     }
 }

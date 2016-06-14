@@ -49,8 +49,8 @@ public class BeaconListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_beacon_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        // TODO: Burasi username olcak sonradan
-        toolbar.setTitle(Globals.email+"'s Beacons");
+
+        toolbar.setTitle(Globals.namesurname+"'s Beacons");
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

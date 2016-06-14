@@ -2,6 +2,9 @@ package com.ingenious.fellas.beaconstaj.Classes;
 
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
@@ -20,8 +23,8 @@ import javax.net.ssl.HttpsURLConnection;
  * Created by mehmet on 14/06/16.
  */
 public class RequestHandler {
-    public static String sendPostRequest(String requestURL,
-                                         HashMap<String, String> postDataParams) {
+    public static JSONObject sendPostRequest(String requestURL,
+                                             HashMap<String, String> postDataParams) {
         URL url;
         String response = "";
         try {
@@ -56,7 +59,12 @@ public class RequestHandler {
             e.printStackTrace();
         }
         Log.i("asdf", "soru ekleme -> " + response);
-        return response;
+        try {
+            return new JSONObject(response);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     private static String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
         StringBuilder result = new StringBuilder();
