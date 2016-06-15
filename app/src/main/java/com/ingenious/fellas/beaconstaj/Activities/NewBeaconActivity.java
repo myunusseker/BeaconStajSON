@@ -1,5 +1,8 @@
 package com.ingenious.fellas.beaconstaj.Activities;
 
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanResult;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -69,6 +72,7 @@ public class NewBeaconActivity extends AppCompatActivity {
             }
         }
     };
+    private ScanCallback scanCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,14 +113,53 @@ public class NewBeaconActivity extends AppCompatActivity {
         final IntentFilter bluetoothFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         this.registerReceiver(bReciever, bluetoothFilter);
 
-        t.start();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            scanCallback = new ScanCallback() {
+                @Override
+                public void onScanResult(int callbackType, ScanResult result) {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        Log.i(TAG, "Bluetooth device found\n");
+                        int rssi = result.getRssi();
+                        BluetoothDevice device = result.getDevice();
+                        Beacon newDevice = new Beacon(device.getName(), device.getAddress(),rssi);
+                        Log.i(TAG, "rssi degisimi: "+rssi+" MAC: "+newDevice.getAddress());
 
+                        boolean beaconExist = false;
+                        for (Beacon beacon : beacons) {
+                            if(beacon.getAddress().equalsIgnoreCase(newDevice.getAddress())){
+                                beacon.setRssi(newDevice.getRssi());
+                                beaconExist = true;
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        if(!beaconExist){
+                            Log.i(TAG, "Add yapmadan once");
+                            beacons.add(newDevice);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+
+                }
+            };
+            BTAdapter.getBluetoothLeScanner().startScan(scanCallback);
+        }
+        else {
+            t.start();
+        }
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        interrupt = true;
-        this.unregisterReceiver(bReciever);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            BTAdapter.getBluetoothLeScanner().stopScan(scanCallback);
+        }
+        else {
+            interrupt = true;
+            this.unregisterReceiver(bReciever);
+
+        }
     }
 }
