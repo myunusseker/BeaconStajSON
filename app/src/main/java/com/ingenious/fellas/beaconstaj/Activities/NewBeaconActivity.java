@@ -1,8 +1,12 @@
 package com.ingenious.fellas.beaconstaj.Activities;
 
 import android.app.ActionBar;
+import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanSettings;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -47,34 +51,6 @@ public class NewBeaconActivity extends AppCompatActivity {
 
     private static final String TAG = "MEHMET";
 
-    private final BroadcastReceiver bReciever = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                Log.i(TAG, "Bluetooth device found\n");
-                int  rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI,Short.MIN_VALUE);
-
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                Beacon newDevice = new Beacon(device.getName(), device.getAddress(),rssi);
-                Log.i(TAG, newDevice.getAddress());
-
-                boolean beaconExist = false;
-                for (Beacon beacon : beacons) {
-                    if(beacon.getAddress().equalsIgnoreCase(newDevice.getAddress())){
-                        beacon.setRssi(newDevice.getRssi());
-                        beaconExist = true;
-                        mAdapter.notifyDataSetChanged();
-                    }
-                }
-
-                if(!beaconExist){
-                    Log.i(TAG, "Add yapmadan once");
-                    beacons.add(newDevice);
-                    mAdapter.notifyDataSetChanged();
-                }
-            }
-        }
-    };
     private ScanCallback scanCallback;
 
     @Override
@@ -83,6 +59,14 @@ public class NewBeaconActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_beacon);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Available Beacons");
+
+        //------------Deneme
+
+        BluetoothLeScanner bluetoothLeScanner = BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner();
+        ScanSettings settings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
+        List<ScanFilter> filters = new ArrayList<ScanFilter>();
+
+        //
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mAdapter = new NewBeaconAdapter(getSupportFragmentManager(),beacons);
@@ -94,7 +78,6 @@ public class NewBeaconActivity extends AppCompatActivity {
         BTAdapter = BluetoothAdapter.getDefaultAdapter();
 
         final IntentFilter bluetoothFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        this.registerReceiver(bReciever, bluetoothFilter);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             interrupt = false;
             t = new Thread() {
@@ -119,6 +102,19 @@ public class NewBeaconActivity extends AppCompatActivity {
         }
         else{
             scanCallback = new ScanCallback() {
+                /*@Override
+                public void onBatchScanResults(List<ScanResult> results) {
+                    Log.i("MEHMET", "onbatch'e girdi");
+                    super.onBatchScanResults(results);
+                    for(ScanResult result : results){
+                        int rssi = result.getRssi();
+                        String BSSID = result.getDevice().getAddress();
+                        ScanRecord record = result.getScanRecord();
+                        long timestamp = result.getTimestampNanos() / 1000000L;
+                        Log.i("asdf","BSSID = " + BSSID + "\nrssi = " + rssi + "\n" + Long.toString(System.currentTimeMillis()) + " " + Long.toString(timestamp));
+                    }
+                }*/
+
                 @Override
                 public void onScanResult(int callbackType, ScanResult result) {
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -127,6 +123,8 @@ public class NewBeaconActivity extends AppCompatActivity {
                         BluetoothDevice device = result.getDevice();
                         Beacon newBeacon = new Beacon(device.getName(), device.getAddress(),rssi);
                         Log.i(TAG, "rssi degisimi: " + rssi + " MAC: " + newBeacon.getAddress());
+
+                        ////BURAYA BIR ESY YAPAPASCAHIOIX
 
                         boolean beaconExist = false;
                         for (Beacon beacon : beacons) {
@@ -145,11 +143,9 @@ public class NewBeaconActivity extends AppCompatActivity {
                             }
                         }
                     }
-
-
                 }
             };
-            BTAdapter.getBluetoothLeScanner().startScan(scanCallback);
+            bluetoothLeScanner.startScan(filters, settings, scanCallback);
         }
 
     }
@@ -159,11 +155,9 @@ public class NewBeaconActivity extends AppCompatActivity {
         super.onBackPressed();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             BTAdapter.getBluetoothLeScanner().stopScan(scanCallback);
-            this.unregisterReceiver(bReciever);
         }
         else {
             interrupt = true;
-            this.unregisterReceiver(bReciever);
         }
     }
 }
