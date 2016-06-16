@@ -208,7 +208,7 @@ public class LoginActivity extends AppCompatActivity{
         protected void onPostExecute(final JSONObject result) {
 
             mAuthTask = null;
-            showProgress(false);
+            //showProgress(false);
 
             try {
                 if (result.getString("status_message").equals("success")) {

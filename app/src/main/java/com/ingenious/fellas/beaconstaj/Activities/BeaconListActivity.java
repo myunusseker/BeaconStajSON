@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
@@ -48,8 +49,9 @@ public class BeaconListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
-    private ArrayList<Beacon> Beacons;
+    private ArrayList<Beacon> Beacons = new ArrayList<>();
     private View recyclerView;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +71,7 @@ public class BeaconListActivity extends AppCompatActivity {
             }
         });
 
-        Beacons = new ArrayList<>();
-        for(int i=1;i<=20;i++){
-            Beacons.add(new Beacon("Name " + i, "Mac address " + i, i ));
-        }
-
+        progressBar = (ProgressBar) findViewById(R.id.list_progress);
         recyclerView = findViewById(R.id.beacon_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
@@ -89,8 +87,13 @@ public class BeaconListActivity extends AppCompatActivity {
         new getBeaconsTask().execute();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new getBeaconsTask().execute();
+    }
+
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        //recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Beacons));
     }
 
@@ -195,6 +198,11 @@ public class BeaconListActivity extends AppCompatActivity {
     public class getBeaconsTask extends AsyncTask<Void, Void, JSONArray> {
 
         @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
         protected JSONArray doInBackground(Void... params) {
             HashMap<String,String> h = new HashMap<>();
             h.put("user_id", String.valueOf(Globals.id));
@@ -229,7 +237,9 @@ public class BeaconListActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+            Globals.myBeacons = Beacons;
             setupRecyclerView((RecyclerView) recyclerView);
+            progressBar.setVisibility(View.GONE);
         }
     }
 }

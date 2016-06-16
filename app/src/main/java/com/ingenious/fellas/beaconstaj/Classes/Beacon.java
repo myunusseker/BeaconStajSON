@@ -9,6 +9,11 @@ public class Beacon {
     private int id;
     public static final int TXPOWER = -55;
 
+    public Beacon(String name, String address) {
+        this.name = name;
+        this.address = address;
+    }
+
     public Beacon(String name, String address, int rssi) {
         this.name = name;
         this.address = address;

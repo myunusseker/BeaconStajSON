@@ -1,7 +1,9 @@
 package com.ingenious.fellas.beaconstaj.Activities;
 
+import android.app.ActionBar;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +28,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ingenious.fellas.beaconstaj.Classes.Beacon;
+import com.ingenious.fellas.beaconstaj.Classes.Globals;
 import com.ingenious.fellas.beaconstaj.Classes.NewBeaconAdapter;
 import com.ingenious.fellas.beaconstaj.R;
 
@@ -78,7 +81,8 @@ public class NewBeaconActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_beacon);
-
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Available Beacons");
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mAdapter = new NewBeaconAdapter(getSupportFragmentManager(),beacons);
@@ -88,6 +92,7 @@ public class NewBeaconActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
 
         BTAdapter = BluetoothAdapter.getDefaultAdapter();
+
         final IntentFilter bluetoothFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         this.registerReceiver(bReciever, bluetoothFilter);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -120,22 +125,24 @@ public class NewBeaconActivity extends AppCompatActivity {
                         Log.i(TAG, "Bluetooth device found\n");
                         int rssi = result.getRssi();
                         BluetoothDevice device = result.getDevice();
-                        Beacon newDevice = new Beacon(device.getName(), device.getAddress(),rssi);
-                        Log.i(TAG, "rssi degisimi: "+rssi+" MAC: "+newDevice.getAddress());
+                        Beacon newBeacon = new Beacon(device.getName(), device.getAddress(),rssi);
+                        Log.i(TAG, "rssi degisimi: " + rssi + " MAC: " + newBeacon.getAddress());
 
                         boolean beaconExist = false;
                         for (Beacon beacon : beacons) {
-                            if(beacon.getAddress().equalsIgnoreCase(newDevice.getAddress())){
-                                beacon.setRssi(newDevice.getRssi());
+                            if(beacon.getAddress().equalsIgnoreCase(newBeacon.getAddress())){
+                                beacon.setRssi(newBeacon.getRssi());
                                 beaconExist = true;
                                 mAdapter.notifyDataSetChanged();
                             }
                         }
 
-                        if(!beaconExist){
+                        if(!beaconExist) {
                             Log.i(TAG, "Add yapmadan once");
-                            beacons.add(newDevice);
-                            mAdapter.notifyDataSetChanged();
+                            if (!Globals.doesBeaconsExists(newBeacon.getAddress())){
+                                beacons.add(newBeacon);
+                                mAdapter.notifyDataSetChanged();
+                            }
                         }
                     }
 

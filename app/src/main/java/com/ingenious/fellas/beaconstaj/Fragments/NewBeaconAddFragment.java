@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ingenious.fellas.beaconstaj.Activities.NewBeaconActivity;
+import com.ingenious.fellas.beaconstaj.Classes.Beacon;
 import com.ingenious.fellas.beaconstaj.Classes.Globals;
 import com.ingenious.fellas.beaconstaj.Classes.RequestHandler;
 import com.ingenious.fellas.beaconstaj.R;
@@ -28,7 +29,8 @@ import java.util.HashMap;
 
 public class NewBeaconAddFragment extends DialogFragment {
 
-    private String mac;
+    private String mac, beaconName;
+    private Context context;
 
     @Nullable
     @Override
@@ -38,6 +40,11 @@ public class NewBeaconAddFragment extends DialogFragment {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -48,8 +55,9 @@ public class NewBeaconAddFragment extends DialogFragment {
                 .setIcon(R.mipmap.ic_launcher)
                 .setPositiveButton("Apply", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        EditText beaconName = (EditText) ((Dialog) dialog).findViewById(R.id.newBeaconName);
-                        new AddNewBeaconTask().execute(mac, String.valueOf(beaconName.getText()),"null","null", String.valueOf(Globals.id));
+                        EditText editText = (EditText) ((Dialog) dialog).findViewById(R.id.newBeaconName);
+                        beaconName = editText.getText().toString();
+                        new AddNewBeaconTask().execute(mac, beaconName,"null","null", String.valueOf(Globals.id));
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -82,10 +90,16 @@ public class NewBeaconAddFragment extends DialogFragment {
                 if(status_message.equals("success"))
                 {
                     Log.i("YUNUS","EKLEDIM");
+                    Toast.makeText(context,beaconName + "\n" + mac + "\nis successfully added.",Toast.LENGTH_LONG).show();
+                    Globals.myBeacons.add(new Beacon(beaconName,mac));
                 }
                 else
                 {
                     Log.i("YUNUS",status_message);
+                    if(context != null)
+                        Toast.makeText(context,status_message,Toast.LENGTH_LONG).show();
+                    else
+                        Log.i("asdf", "activity yok aq");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
