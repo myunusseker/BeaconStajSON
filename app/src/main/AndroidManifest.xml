@@ -39,7 +39,7 @@
         </activity>
         <activity android:name=".Activities.NewBeaconActivity" />
         <activity
-            android:name=".Activities.Signup"
+            android:name=".Activities.SignupActivity"
             android:label="@string/title_activity_signup"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity{
         mSignup.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, Signup.class));
+                startActivity(new Intent(LoginActivity.this, SignupActivity.class));
             }
         });
 
@@ -201,7 +201,7 @@ public class LoginActivity extends AppCompatActivity{
             HashMap<String,String> h = new HashMap<String,String>();
             h.put("username",mUsername);
             h.put("password",mPassword);
-            return RequestHandler.sendPostRequest("http://104.236.17.172/login.php",h);
+            return RequestHandler.sendPostRequest(Globals.URL+"login.php",h);
         }
 
         @Override

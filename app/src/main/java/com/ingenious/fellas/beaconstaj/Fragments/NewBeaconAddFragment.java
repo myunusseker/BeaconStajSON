@@ -7,14 +7,22 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import com.ingenious.fellas.beaconstaj.Activities.NewBeaconActivity;
 import com.ingenious.fellas.beaconstaj.Classes.Globals;
+import com.ingenious.fellas.beaconstaj.Classes.RequestHandler;
 import com.ingenious.fellas.beaconstaj.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -30,25 +38,58 @@ public class NewBeaconAddFragment extends DialogFragment {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-
         builder .setView(inflater.inflate(R.layout.dialog_newbeacon, null))
-                .setTitle("Please specify your device settings")
-                .setIcon(R.drawable.ic_add)
+                .setTitle("Specify your device settings")
+                .setIcon(R.mipmap.ic_launcher)
                 .setPositiveButton("Apply", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // FIRE ZE MISSILES!
-                        Log.i("YUNUS","yey ekledim");
+                        EditText beaconName = (EditText) ((Dialog) dialog).findViewById(R.id.newBeaconName);
+                        new AddNewBeaconTask().execute(mac, String.valueOf(beaconName.getText()),"null","null", String.valueOf(Globals.id));
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Log.i("YUNUS","ayyy vazgecti");
-                    }
+                    public void onClick(DialogInterface dialog, int id) {}
                 });
         return builder.create();
+    }
+    public class AddNewBeaconTask extends AsyncTask<String,Void,JSONObject>
+    {
+
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            String url = Globals.URL + "addbeacon.php";
+            HashMap<String, String> h = new HashMap<>();
+            h.put("mac", params[0]);
+            h.put("beacon_name",params[1]);
+            h.put("photo",params[2]);
+            h.put("icon",params[3]);
+            h.put("user_id",params[4]);
+
+            JSONObject jsonData = RequestHandler.sendPostRequest(url, h);
+
+            return jsonData;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject jsonObject) {
+            try {
+                String status_message = jsonObject.getString("status_message");
+                if(status_message.equals("success"))
+                {
+                    Log.i("YUNUS","EKLEDIM");
+                }
+                else
+                {
+                    Log.i("YUNUS",status_message);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

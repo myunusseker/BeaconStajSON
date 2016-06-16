@@ -87,33 +87,32 @@ public class NewBeaconActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
-        interrupt = false;
-         t = new Thread() {
-
-            @Override
-            public void run() {
-                try {
-                    while (!isInterrupted() && !interrupt) {
-                        Thread.sleep(300);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Log.i(TAG,"BT run");
-                                BTAdapter.startDiscovery();
-                            }
-                        });
-                    }
-                } catch (InterruptedException e) {
-                }
-            }
-        };
-
         BTAdapter = BluetoothAdapter.getDefaultAdapter();
-
         final IntentFilter bluetoothFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         this.registerReceiver(bReciever, bluetoothFilter);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            interrupt = false;
+            t = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        while (!isInterrupted() && !interrupt) {
+                            Thread.sleep(5000);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.i(TAG, "BT run");
+                                    BTAdapter.startDiscovery();
+                                }
+                            });
+                        }
+                    } catch (InterruptedException e) {
+                    }
+                }
+            };
+            t.start();
+        }
+        else{
             scanCallback = new ScanCallback() {
                 @Override
                 public void onScanResult(int callbackType, ScanResult result) {
@@ -145,9 +144,7 @@ public class NewBeaconActivity extends AppCompatActivity {
             };
             BTAdapter.getBluetoothLeScanner().startScan(scanCallback);
         }
-        else {
-            t.start();
-        }
+
     }
 
     @Override
@@ -155,11 +152,11 @@ public class NewBeaconActivity extends AppCompatActivity {
         super.onBackPressed();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             BTAdapter.getBluetoothLeScanner().stopScan(scanCallback);
+            this.unregisterReceiver(bReciever);
         }
         else {
             interrupt = true;
             this.unregisterReceiver(bReciever);
-
         }
     }
 }

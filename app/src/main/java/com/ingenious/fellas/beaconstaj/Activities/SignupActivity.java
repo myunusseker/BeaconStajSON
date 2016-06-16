@@ -24,7 +24,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class Signup extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity {
 
     private Button button ;
     private EditText username;
@@ -48,7 +48,7 @@ public class Signup extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String errormsg = "";
-                View view = Signup.this.getCurrentFocus();
+                View view = SignupActivity.this.getCurrentFocus();
                 if(view!=null)
                 {
                     InputMethodManager mng = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -99,9 +99,9 @@ public class Signup extends AppCompatActivity {
         protected void onPostExecute(JSONObject s) {
 
             try {
-                int status = s.getInt("status");
-                Log.i(Globals.TAG, "signup status -> " + String.valueOf(status));
-                if(status == 200)
+                String status_message = s.getString("status_message");
+                Log.i(Globals.TAG, "signup status -> " + String.valueOf(status_message));
+                if(status_message.equals("success"))
                 {
                     JSONObject data = (JSONObject) s.get("data");
 
@@ -114,13 +114,13 @@ public class Signup extends AppCompatActivity {
                     editor.putInt("id", data.getInt("user_id"));
                     editor.commit();
 
-                    Toast.makeText(Signup.this,"Welcome " + data.getString("name_surname"),Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(Signup.this , MainActivity.class);
+                    Toast.makeText(SignupActivity.this,"Welcome " + data.getString("name_surname"),Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(SignupActivity.this , MainActivity.class);
                     startActivity(intent);
                 }
                 else
                 {
-                    Snackbar snackbar = Snackbar.make(coordinatorLayout,"Kayit Basarisiz.",Snackbar.LENGTH_LONG);
+                    Snackbar snackbar = Snackbar.make(coordinatorLayout,status_message,Snackbar.LENGTH_LONG);
                     snackbar.show();
                 }
             } catch (JSONException e) {
