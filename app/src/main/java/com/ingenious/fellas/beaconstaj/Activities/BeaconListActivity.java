@@ -214,9 +214,10 @@ public class BeaconListActivity extends AppCompatActivity {
                 Log.i(Globals.TAG, "response'u alamadik");
             }
 
-            JSONArray arr = null;
+            JSONArray arr = new JSONArray();
             try {
-                arr = response.getJSONArray("data");
+                if (response.getJSONArray("data") != null)
+                    arr = response.getJSONArray("data");
             } catch (JSONException e) {
                 e.printStackTrace();
             }

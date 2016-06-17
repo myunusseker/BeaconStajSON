@@ -1,36 +1,27 @@
 package com.ingenious.fellas.beaconstaj.Activities;
 
-import android.app.ActionBar;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
-import android.graphics.Bitmap;
+import android.content.IntentFilter;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.ingenious.fellas.beaconstaj.Classes.Beacon;
 import com.ingenious.fellas.beaconstaj.Classes.Globals;
 import com.ingenious.fellas.beaconstaj.Classes.NewBeaconAdapter;
@@ -39,7 +30,8 @@ import com.ingenious.fellas.beaconstaj.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewBeaconActivity extends AppCompatActivity {
+public class NewBeaconActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private RecyclerView recyclerView;
     private NewBeaconAdapter mAdapter;
@@ -52,13 +44,46 @@ public class NewBeaconActivity extends AppCompatActivity {
     private static final String TAG = "MEHMET";
 
     private ScanCallback scanCallback;
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
+    private LocationRequest mLocationRequest;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initializeLocation();
+        mGoogleApiClient.connect();
+      //  createLocationRequest();
+    }
+/*
+    private void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+    }*/
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_beacon);
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Available Beacons");
+
 
         //------------Deneme
 
@@ -69,7 +94,7 @@ public class NewBeaconActivity extends AppCompatActivity {
         //
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mAdapter = new NewBeaconAdapter(getSupportFragmentManager(),beacons);
+        mAdapter = new NewBeaconAdapter(getSupportFragmentManager(), beacons);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -99,8 +124,7 @@ public class NewBeaconActivity extends AppCompatActivity {
                 }
             };
             t.start();
-        }
-        else{
+        } else {
             scanCallback = new ScanCallback() {
                 /*@Override
                 public void onBatchScanResults(List<ScanResult> results) {
@@ -117,27 +141,27 @@ public class NewBeaconActivity extends AppCompatActivity {
 
                 @Override
                 public void onScanResult(int callbackType, ScanResult result) {
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         Log.i(TAG, "Bluetooth device found\n");
                         int rssi = result.getRssi();
                         BluetoothDevice device = result.getDevice();
-                        Beacon newBeacon = new Beacon(device.getName(), device.getAddress(),rssi);
+                        Beacon newBeacon = new Beacon(device.getName(), device.getAddress(), rssi);
                         Log.i(TAG, "rssi degisimi: " + rssi + " MAC: " + newBeacon.getAddress());
 
                         ////BURAYA BIR ESY YAPAPASCAHIOIX
 
                         boolean beaconExist = false;
                         for (Beacon beacon : beacons) {
-                            if(beacon.getAddress().equalsIgnoreCase(newBeacon.getAddress())){
+                            if (beacon.getAddress().equalsIgnoreCase(newBeacon.getAddress())) {
                                 beacon.setRssi(newBeacon.getRssi());
                                 beaconExist = true;
                                 mAdapter.notifyDataSetChanged();
                             }
                         }
 
-                        if(!beaconExist) {
+                        if (!beaconExist) {
                             Log.i(TAG, "Add yapmadan once");
-                            if (!Globals.doesBeaconsExists(newBeacon.getAddress())){
+                            if (!Globals.doesBeaconsExists(newBeacon.getAddress())) {
                                 beacons.add(newBeacon);
                                 mAdapter.notifyDataSetChanged();
                             }
@@ -147,7 +171,18 @@ public class NewBeaconActivity extends AppCompatActivity {
             };
             bluetoothLeScanner.startScan(filters, settings, scanCallback);
         }
+    }
 
+    private void initializeLocation() {
+        Log.i("aaa", "initialize location");
+
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
     }
 
     @Override
@@ -155,9 +190,28 @@ public class NewBeaconActivity extends AppCompatActivity {
         super.onBackPressed();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             BTAdapter.getBluetoothLeScanner().stopScan(scanCallback);
-        }
-        else {
+        } else {
             interrupt = true;
         }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.i("aaa", "onConnected");
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+            Log.i("aaa", "Lang : " + mLastLocation.getLatitude() + " Long: " + mLastLocation.getLongitude());
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.i(TAG, "error -> " + connectionResult.getErrorCode());
     }
 }

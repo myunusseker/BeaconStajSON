@@ -3,6 +3,8 @@ package com.ingenious.fellas.beaconstaj.Classes;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import java.util.ArrayList;
 
 /**
@@ -12,7 +14,7 @@ public class Globals {
     public static String email, username, password ,namesurname;
     public static String TAG = "asdf", URL = "http://188.166.29.184/";
     public static int id;
-    public static ArrayList<Beacon> myBeacons;
+    public static ArrayList<Beacon> myBeacons = new ArrayList<>();
 
     public static void initialize(Context applicationContext) {
         SharedPreferences sharedPref = applicationContext.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
@@ -21,6 +23,7 @@ public class Globals {
         password = sharedPref.getString("password","nullUser");
         namesurname = sharedPref.getString("namesurname","nullUser");
         id = sharedPref.getInt("id",-1);
+
     }
 
 
