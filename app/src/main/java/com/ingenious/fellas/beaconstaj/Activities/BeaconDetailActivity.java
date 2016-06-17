@@ -1,5 +1,6 @@
 package com.ingenious.fellas.beaconstaj.Activities;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -86,5 +87,11 @@ public class BeaconDetailActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        BeaconDetailFragment.onBack();
     }
 }
