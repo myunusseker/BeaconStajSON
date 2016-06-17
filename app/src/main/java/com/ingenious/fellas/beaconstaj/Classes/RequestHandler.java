@@ -37,7 +37,6 @@ public class RequestHandler {
             conn.setDoInput(true);
             conn.setDoOutput(true);
 
-
             OutputStream os = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(os, "UTF-8"));
@@ -67,6 +66,7 @@ public class RequestHandler {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.i("asdf","null return edecel");
         return null;
     }
     private static String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
