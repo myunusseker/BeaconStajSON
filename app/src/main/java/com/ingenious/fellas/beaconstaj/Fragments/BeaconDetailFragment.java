@@ -70,7 +70,7 @@ public class BeaconDetailFragment extends Fragment {
             //mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_NAME));
             mBeacon = new Beacon(getArguments().getString(ARG_ITEM_NAME)
                     ,getArguments().getString(ARG_ITEM_MAC), 1);
-
+            toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
@@ -109,7 +109,7 @@ public class BeaconDetailFragment extends Fragment {
                         ((TextView) rootView.findViewById(R.id.beacon_detail_rssi)).setText("rssi:   " + rssi);
                         mBeacon.setRssi(rssi);
                         ((TextView) rootView.findViewById(R.id.beacon_detail_distance)).setText(mBeacon.getDistance());
-                        toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
+
                         toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD,rssi*10+1000);
                         if(rssi>-35){
                             onBack();
