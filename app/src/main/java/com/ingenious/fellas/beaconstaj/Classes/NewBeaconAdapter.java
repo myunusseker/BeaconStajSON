@@ -20,7 +20,6 @@ public class NewBeaconAdapter extends RecyclerView.Adapter<NewBeaconAdapter.MyVi
 
     private final FragmentManager fragmentManager;
     private List<Beacon> beaconList;
-    private Context context;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView address, distance, rssi;
@@ -42,7 +41,6 @@ public class NewBeaconAdapter extends RecyclerView.Adapter<NewBeaconAdapter.MyVi
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.new_beacon_list, parent, false);
-        context = parent.getContext();
         return new MyViewHolder(itemView);
     }
 

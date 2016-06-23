@@ -37,9 +37,7 @@ public class NewBeaconActivity extends AppCompatActivity implements GoogleApiCli
     private RecyclerView recyclerView;
     private NewBeaconAdapter mAdapter;
     public static GoogleApiClient mGoogleApiClient;
-
-
-    volatile Thread t;
+    
     private BluetoothAdapter BTAdapter;
     List<Beacon> beacons = new ArrayList<>();
     private static final String TAG = "MEHMET";

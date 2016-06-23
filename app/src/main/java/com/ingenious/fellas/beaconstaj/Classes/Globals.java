@@ -33,5 +33,14 @@ public class Globals {
         return false;
     }
 
+    public static Beacon getBeacon(String mac)
+    {
+        for(int i=0;i<myBeacons.size();i++)
+        {
+            if(myBeacons.get(i).getAddress().equals(mac))
+                return myBeacons.get(i);
+        }
+        return null;
+    }
 
 }
