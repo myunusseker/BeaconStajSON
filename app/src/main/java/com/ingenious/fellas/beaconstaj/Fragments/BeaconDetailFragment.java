@@ -48,7 +48,6 @@ public class BeaconDetailFragment extends Fragment {
      */
     public static final String ARG_ITEM_NAME = "item_name";
     public static final String ARG_ITEM_MAC = "item_mac";
-    String latitude,longtitude;
     /**
      * The dummy content this fragment is presenting.
      */
@@ -88,7 +87,6 @@ public class BeaconDetailFragment extends Fragment {
                 dialog.show(getFragmentManager(),"dialog");
             }
         });
-        new getLocationTask().execute();
     }
 
     @Override
@@ -107,43 +105,4 @@ public class BeaconDetailFragment extends Fragment {
         return rootView;
     }
 
-    public class getLocationTask extends AsyncTask<Void, Void, JSONObject> {
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-            HashMap<String,String> h = new HashMap<>();
-            h.put("mac", String.valueOf(mBeacon.getAddress()));
-            JSONObject response = RequestHandler.sendPostRequest(Globals.URL + "getLocation.php", h);
-            try {
-                Log.i(Globals.TAG, response.getString("status_message"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Log.i(Globals.TAG, "response'u alamadik");
-            }
-
-            JSONObject obj = new JSONObject();
-            try {
-                if (response.getJSONObject("data") != null)
-                    obj = response.getJSONObject("data");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return obj;
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject jsonObject) {
-            if(jsonObject == null) return;
-
-                try {
-                    latitude = jsonObject.getString("latitude");
-                    longtitude = jsonObject.getString("longtitude");
-                    Log.i("latlar",latitude);
-                    Log.i("latlar",longtitude);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-        }
-    }
 }

@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.ingenious.fellas.beaconstaj.Classes.Globals;
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
+
+        Log.i("asdf","main activity burasi");
 
         if(!isConnected){
             Toast.makeText(this, "No internet connection", Toast.LENGTH_LONG).show();
