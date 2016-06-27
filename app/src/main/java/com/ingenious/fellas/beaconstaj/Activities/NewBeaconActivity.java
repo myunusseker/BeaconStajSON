@@ -35,18 +35,17 @@ import java.util.List;
 public class NewBeaconActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
 
     private RecyclerView recyclerView;
-    private NewBeaconAdapter mAdapter;
+    public static  NewBeaconAdapter mAdapter;
     public static GoogleApiClient mGoogleApiClient;
-    
-    private BluetoothAdapter BTAdapter;
-    List<Beacon> beacons = new ArrayList<>();
+
+    public static List<Beacon> beacons = new ArrayList<>();
     private static final String TAG = "MEHMET";
 
-    private ScanCallback scanCallback;
     private static Location mLastLocation;
 
     @Override
     protected void onStart() {
+        Globals.whichActivity = 1;
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -76,10 +75,6 @@ public class NewBeaconActivity extends AppCompatActivity implements GoogleApiCli
 
         //------------Deneme
 
-        BluetoothLeScanner bluetoothLeScanner = BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner();
-        ScanSettings settings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
-        List<ScanFilter> filters = new ArrayList<ScanFilter>();
-
         //
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -89,58 +84,11 @@ public class NewBeaconActivity extends AppCompatActivity implements GoogleApiCli
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
-        BTAdapter = BluetoothAdapter.getDefaultAdapter();
-
-
-        scanCallback = new ScanCallback() {
-            /*@Override
-            public void onBatchScanResults(List<ScanResult> results) {
-                Log.i("MEHMET", "onbatch'e girdi");
-                super.onBatchScanResults(results);
-                for(ScanResult result : results){
-                    int rssi = result.getRssi();
-                    String BSSID = result.getDevice().getAddress();
-                    ScanRecord record = result.getScanRecord();
-                    long timestamp = result.getTimestampNanos() / 1000000L;
-                    Log.i("asdf","BSSID = " + BSSID + "\nrssi = " + rssi + "\n" + Long.toString(System.currentTimeMillis()) + " " + Long.toString(timestamp));
-                }
-            }*/
-
-            @Override
-            public void onScanResult(int callbackType, ScanResult result) {
-                Log.i(TAG, "Bluetooth device found\n");
-                int rssi = result.getRssi();
-                BluetoothDevice device = result.getDevice();
-                Beacon newBeacon = new Beacon(device.getName(), device.getAddress(),rssi);
-                Log.i(TAG, "rssi degisimi: " + rssi + " MAC: " + newBeacon.getAddress());
-
-                ////BURAYA BIR ESY YAPAPASCAHIOIX
-
-                boolean beaconExist = false;
-                for (Beacon beacon : beacons) {
-                    if(beacon.getAddress().equalsIgnoreCase(newBeacon.getAddress())){
-                        beacon.setRssi(newBeacon.getRssi());
-                        beaconExist = true;
-                        mAdapter.notifyDataSetChanged();
-                    }
-                }
-                if(!beaconExist) {
-                    Log.i(TAG, "Add yapmadan once");
-                    if (!Globals.doesBeaconsExists(newBeacon.getAddress())){
-                        beacons.add(newBeacon);
-                        mAdapter.notifyDataSetChanged();
-                        new sendLocationTask().execute(newBeacon);
-                    }
-                }
-            }
-        };
-        bluetoothLeScanner.startScan(filters, settings, scanCallback);
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        BTAdapter.getBluetoothLeScanner().stopScan(scanCallback);
     }
 
     @Override
@@ -163,7 +111,7 @@ public class NewBeaconActivity extends AppCompatActivity implements GoogleApiCli
     public void onConnectionFailed(ConnectionResult connectionResult) {
     }
 
-    private class sendLocationTask extends AsyncTask<Beacon,Void,Void>{
+    public static class sendLocationTask extends AsyncTask<Beacon,Void,Void>{
 
         @Override
         protected Void doInBackground(Beacon... params) {

@@ -30,18 +30,18 @@ import java.util.List;
 
 public class BeaconFinderFragment extends DialogFragment {
 
-    private String mac, beaconName;
-    private Context context;
-    private ToneGenerator toneG;
-    private BluetoothAdapter BTAdapter;
-    private ScanCallback callback;
-    private Beacon mBeacon;
+    public static String mac, beaconName;
+    public static Context context;
+    public static ToneGenerator toneG;
+    public static Beacon mBeacon;
     private View rootView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = super.onCreateView(inflater, container, savedInstanceState);
+        Globals.finderDialog = getDialog();
+        Globals.whichActivity = 2;
         return rootView;
     }
 
@@ -69,36 +69,11 @@ public class BeaconFinderFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                     }
                 });
-        BluetoothLeScanner bluetoothLeScanner = BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner();
-        ScanSettings settings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
-        List<ScanFilter> filters = new ArrayList<ScanFilter>();
-        BTAdapter = BluetoothAdapter.getDefaultAdapter();
-        callback  = new ScanCallback() {
-            @Override
-            public void onScanResult(int callbackType, ScanResult result) {
-                Log.i("YUNUS", "Bluyo\n");
-                int rssi = result.getRssi();
-                String foundMac = result.getDevice().getAddress();
-                if(foundMac.equalsIgnoreCase(mac)){
-                    Log.i("YUNUS", String.valueOf(rssi));
-                    ((TextView) getDialog().findViewById(R.id.beacon_finder_rssi)).setText(String.valueOf(rssi));
-                    mBeacon.setRssi(rssi);
-                    Log.i("YUNUS",mBeacon.getDistance());
-                    ((TextView) getDialog().findViewById(R.id.beacon_finder_result)).setText(mBeacon.getDistance());
-                    toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD,rssi*10+1000);
-                    if(rssi>-35){
-                        ((TextView) getDialog().findViewById(R.id.beacon_finder_result)).setText("You have found");
-                    }
-                }
-            }
-        };
-        bluetoothLeScanner.startScan(filters, settings, callback);
         return builder.create();
     }
 
     @Override
     public void onDestroy() {
-        BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner().stopScan(callback);
         toneG.stopTone();
         super.onDestroy();
     }
