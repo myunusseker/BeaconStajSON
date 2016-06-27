@@ -1,5 +1,9 @@
 package com.ingenious.fellas.beaconstaj.Activities;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -11,6 +15,9 @@ import android.widget.Toast;
 
 import com.ingenious.fellas.beaconstaj.Classes.Globals;
 import com.ingenious.fellas.beaconstaj.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
+        startBluetoothSearch();
         Log.i("asdf","main activity burasi");
 
         if(!isConnected){
@@ -43,5 +51,16 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, BeaconListActivity.class);
             startActivity(intent);
         }
+    }
+
+    private void startBluetoothSearch() {
+        BluetoothAdapter BTAdapter;
+        BluetoothLeScanner bluetoothLeScanner = BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner();
+        ScanSettings settings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
+        List<ScanFilter> filters = new ArrayList<ScanFilter>();
+        BTAdapter = BluetoothAdapter.getDefaultAdapter();
+        bluetoothLeScanner.startScan(filters, settings, Globals.scanCallback);
+
+
     }
 }
