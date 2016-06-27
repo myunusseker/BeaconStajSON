@@ -244,14 +244,16 @@ public class BeaconListActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-            for (int i=0;i<Integer.MAX_VALUE;i++);
-            progressBar.setVisibility(View.GONE);
+            Log.i("oopo", "bos bekleme basladi");
+            for (int i=0;i<Integer.MAX_VALUE/50;i++);
+            Log.i("oopo", "bos bekleme bitti");
             for(int i=0;i<Globals.myBeacons.size();i++){
                 Globals.myBeacons.get(i).setIsNear(false);
                 for(int j=0;j<Globals.beaconsAround.size();j++)
                     if(Globals.myBeacons.get(i).getAddress().equals(Globals.beaconsAround.get(j).getAddress()))
                         Globals.myBeacons.get(i).setIsNear(true);
             }
+            progressBar.setVisibility(View.GONE);
             setupRecyclerView((RecyclerView) recyclerView);
 
         }
