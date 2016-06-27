@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -52,6 +53,7 @@ public class BeaconListActivity extends AppCompatActivity {
     private ArrayList<Beacon> Beacons = new ArrayList<>();
     private View recyclerView;
     private ProgressBar progressBar;
+    private ImageView icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +119,7 @@ public class BeaconListActivity extends AppCompatActivity {
             holder.mItem = mBeacons.get(position);
             holder.mIdView.setText(mBeacons.get(position).getName());
             holder.mContentView.setText(mBeacons.get(position).getAddress());
+            holder.icon.setBackgroundResource(R.drawable.icon_map_black);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -152,12 +155,14 @@ public class BeaconListActivity extends AppCompatActivity {
             public final TextView mIdView;
             public final TextView mContentView;
             public Beacon mItem;
+            public final ImageView icon;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
                 mIdView = (TextView) view.findViewById(R.id.id);
                 mContentView = (TextView) view.findViewById(R.id.content);
+                icon = (ImageView) view.findViewById(R.id.icon);
             }
 
             @Override
