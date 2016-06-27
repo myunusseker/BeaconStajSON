@@ -1,12 +1,5 @@
 package com.ingenious.fellas.beaconstaj.Activities;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.le.BluetoothLeScanner;
-import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanResult;
-import android.bluetooth.le.ScanSettings;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,9 +21,7 @@ import com.ingenious.fellas.beaconstaj.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class NewBeaconActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
 
@@ -38,7 +29,6 @@ public class NewBeaconActivity extends AppCompatActivity implements GoogleApiCli
     public static  NewBeaconAdapter mAdapter;
     public static GoogleApiClient mGoogleApiClient;
 
-    public static List<Beacon> beacons = new ArrayList<>();
     private static final String TAG = "MEHMET";
 
     private static Location mLastLocation;
@@ -78,7 +68,7 @@ public class NewBeaconActivity extends AppCompatActivity implements GoogleApiCli
         //
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mAdapter = new NewBeaconAdapter(getSupportFragmentManager(),beacons);
+        mAdapter = new NewBeaconAdapter(getSupportFragmentManager(),Globals.beaconsAround);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

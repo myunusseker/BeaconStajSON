@@ -15,6 +15,7 @@ import com.ingenious.fellas.beaconstaj.Fragments.BeaconFinderFragment;
 import com.ingenious.fellas.beaconstaj.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by mehmet on 09/06/16.
@@ -26,6 +27,7 @@ public class Globals {
     public static ArrayList<Beacon> myBeacons = new ArrayList<>();
     public static int whichActivity=0;
     public static Dialog finderDialog;
+    public static List<Beacon> beaconsAround = new ArrayList<>();
     public static ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
@@ -37,7 +39,7 @@ public class Globals {
                 Log.i(TAG, "rssi degisimi: " + rssi + " MAC: " + newBeacon.getAddress());
 
                 boolean beaconExist = false;
-                for (Beacon beacon : NewBeaconActivity.beacons) {
+                for (Beacon beacon : beaconsAround) {
                     if(beacon.getAddress().equalsIgnoreCase(newBeacon.getAddress())){
                         beacon.setRssi(newBeacon.getRssi());
                         beaconExist = true;
@@ -47,7 +49,7 @@ public class Globals {
                 if(!beaconExist) {
                     Log.i(TAG, "Add yapmadan once");
                     if (!Globals.doesBeaconsExists(newBeacon.getAddress())){
-                        NewBeaconActivity.beacons.add(newBeacon);
+                        beaconsAround.add(newBeacon);
                         NewBeaconActivity.mAdapter.notifyDataSetChanged();
                         new NewBeaconActivity.sendLocationTask().execute(newBeacon);
                     }
@@ -68,6 +70,25 @@ public class Globals {
                     if(rssi>-35){
                         ((TextView) finderDialog.findViewById(R.id.beacon_finder_result)).setText("You have found");
                     }
+                }
+            }
+            else if (whichActivity == 3){
+                Log.i(TAG, "Bluetooth device found\n");
+                int rssi = result.getRssi();
+                BluetoothDevice device = result.getDevice();
+                Beacon newBeacon = new Beacon(device.getName(), device.getAddress(),rssi);
+                Log.i(TAG, "rssi degisimi: " + rssi + " MAC: " + newBeacon.getAddress());
+
+                boolean beaconExist = false;
+                for (Beacon beacon : beaconsAround) {
+                    if(beacon.getAddress().equalsIgnoreCase(newBeacon.getAddress())){
+                        beacon.setRssi(newBeacon.getRssi());
+                        beaconExist = true;
+                    }
+                }
+                if(!beaconExist) {
+                    Log.i(TAG, "Add yapmadan once");
+                    beaconsAround.add(newBeacon);
                 }
             }
         }

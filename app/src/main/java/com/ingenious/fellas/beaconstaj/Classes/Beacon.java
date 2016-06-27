@@ -8,6 +8,7 @@ public class Beacon {
     private String distance;
     private int id;
     public static final int TXPOWER = -55;
+    private boolean isNear;
 
     public Beacon(String name, String address) {
         this.name = name;
@@ -83,5 +84,13 @@ public class Beacon {
     public double getAccuracy()
     {
         return accuracy;
+    }
+
+    public boolean getIsNear() {
+        return isNear;
+    }
+
+    public void setIsNear(boolean near) {
+        isNear = near;
     }
 }

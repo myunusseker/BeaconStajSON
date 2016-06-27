@@ -50,7 +50,6 @@ public class BeaconListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
-    private ArrayList<Beacon> Beacons = new ArrayList<>();
     private View recyclerView;
     private ProgressBar progressBar;
     private ImageView icon;
@@ -59,6 +58,7 @@ public class BeaconListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beacon_list);
+        Globals.whichActivity = 3;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -96,7 +96,7 @@ public class BeaconListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Beacons));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Globals.myBeacons));
     }
 
     public class SimpleItemRecyclerViewAdapter
@@ -119,7 +119,8 @@ public class BeaconListActivity extends AppCompatActivity {
             holder.mItem = mBeacons.get(position);
             holder.mIdView.setText(mBeacons.get(position).getName());
             holder.mContentView.setText(mBeacons.get(position).getAddress());
-            holder.icon.setBackgroundResource(R.drawable.icon_map_black);
+            if (!mBeacons.get(position).getIsNear())
+                holder.icon.setBackgroundResource(R.drawable.icon_map_black);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -232,20 +233,27 @@ public class BeaconListActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(JSONArray jsonArray) {
             if(jsonArray == null) return;
-            Beacons = new ArrayList<>();
+            Globals.myBeacons = new ArrayList<>();
             for (int i=0;i<jsonArray.length();i++){
                 try {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    Beacons.add(new Beacon(jsonObject.getString("beacon_name"),
+                    Globals.myBeacons.add(new Beacon(jsonObject.getString("beacon_name"),
                             jsonObject.getString("mac"), 0));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            Globals.myBeacons = Beacons;
-            setupRecyclerView((RecyclerView) recyclerView);
+            for (int i=0;i<Integer.MAX_VALUE;i++);
             progressBar.setVisibility(View.GONE);
+            for(int i=0;i<Globals.myBeacons.size();i++){
+                Globals.myBeacons.get(i).setIsNear(false);
+                for(int j=0;j<Globals.beaconsAround.size();j++)
+                    if(Globals.myBeacons.get(i).getAddress().equals(Globals.beaconsAround.get(j).getAddress()))
+                        Globals.myBeacons.get(i).setIsNear(true);
+            }
+            setupRecyclerView((RecyclerView) recyclerView);
+
         }
     }
 }
