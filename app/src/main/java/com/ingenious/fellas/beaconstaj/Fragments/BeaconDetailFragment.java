@@ -82,9 +82,6 @@ public class BeaconDetailFragment extends Fragment {
                 bundle.putString("mac", mBeacon.getAddress());;
                 bundle.putString("beaconName", mBeacon.getName());
 
-                BeaconFinderFragment dialog = new BeaconFinderFragment();
-                dialog.setArguments(bundle);
-                dialog.show(getFragmentManager(),"dialog");
             }
         });
     }

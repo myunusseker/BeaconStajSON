@@ -10,8 +10,8 @@ import android.media.ToneGenerator;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.ingenious.fellas.beaconstaj.Activities.BeaconFinderActivity;
 import com.ingenious.fellas.beaconstaj.Activities.NewBeaconActivity;
-import com.ingenious.fellas.beaconstaj.Fragments.BeaconFinderFragment;
 import com.ingenious.fellas.beaconstaj.R;
 
 import java.util.ArrayList;
@@ -26,7 +26,6 @@ public class Globals {
     public static int id;
     public static ArrayList<Beacon> myBeacons = new ArrayList<>();
     public static int whichActivity=0;
-    public static Dialog finderDialog;
     public static List<Beacon> beaconsAround = new ArrayList<>();
     public static ScanCallback scanCallback = new ScanCallback() {
         @Override
@@ -59,16 +58,16 @@ public class Globals {
                 Log.i("YUNUS", "Bluyo\n");
                 int rssi = result.getRssi();
                 String foundMac = result.getDevice().getAddress();
-                if(foundMac.equalsIgnoreCase(BeaconFinderFragment.mac)){
+                if(foundMac.equalsIgnoreCase(BeaconFinderActivity.mac)){
                     Log.i("YUNUS", String.valueOf(rssi));
 
-                    ((TextView) finderDialog.findViewById(R.id.beacon_finder_rssi)).setText(String.valueOf(rssi));
-                    BeaconFinderFragment.mBeacon.setRssi(rssi);
-                    Log.i("YUNUS",BeaconFinderFragment.mBeacon.getDistance());
-                    ((TextView) finderDialog.findViewById(R.id.beacon_finder_result)).setText(BeaconFinderFragment.mBeacon.getDistance());
-                    BeaconFinderFragment.toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD,rssi*10+1000);
+                    (BeaconFinderActivity.finderRssi).setText(String.valueOf(rssi));
+                    BeaconFinderActivity.mBeacon.setRssi(rssi);
+                    Log.i("YUNUS",BeaconFinderActivity.mBeacon.getDistance());
+                    (BeaconFinderActivity.finderResult).setText(BeaconFinderActivity.mBeacon.getDistance());
+                    BeaconFinderActivity.toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD,rssi*10+1000);
                     if(rssi>-35){
-                        ((TextView) finderDialog.findViewById(R.id.beacon_finder_result)).setText("You have found");
+                        (BeaconFinderActivity.finderResult).setText("You have found");
                     }
                 }
             }
