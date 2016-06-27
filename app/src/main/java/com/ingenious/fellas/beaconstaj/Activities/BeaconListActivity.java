@@ -115,7 +115,7 @@ public class BeaconListActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
             holder.mItem = mBeacons.get(position);
             holder.mIdView.setText(mBeacons.get(position).getName());
             holder.mContentView.setText(mBeacons.get(position).getAddress());
@@ -135,12 +135,21 @@ public class BeaconListActivity extends AppCompatActivity {
                                 .replace(R.id.beacon_detail_container, fragment)
                                 .commit();
                     } else {
-                        Log.i("asdf", holder.mItem.getName() + " " + holder.mItem.getAddress());
-                        Context context = v.getContext();
-                        Intent intent = new Intent(context, BeaconDetailActivity.class);
-                        intent.putExtra(BeaconDetailFragment.ARG_ITEM_NAME, holder.mItem.getName());
-                        intent.putExtra(BeaconDetailFragment.ARG_ITEM_MAC, holder.mItem.getAddress());
-                        context.startActivity(intent);
+
+                        if (mBeacons.get(position).getIsNear()){
+                            Intent intent = new Intent(BeaconListActivity.this, BeaconFinderActivity.class);
+                            intent.putExtra(BeaconDetailFragment.ARG_ITEM_NAME, holder.mItem.getName());
+                            intent.putExtra(BeaconDetailFragment.ARG_ITEM_MAC, holder.mItem.getAddress());
+
+                        }
+                        else {
+                            Log.i("asdf", holder.mItem.getName() + " " + holder.mItem.getAddress());
+                            Context context = v.getContext();
+                            Intent intent = new Intent(context, BeaconDetailActivity.class);
+                            intent.putExtra(BeaconDetailFragment.ARG_ITEM_NAME, holder.mItem.getName());
+                            intent.putExtra(BeaconDetailFragment.ARG_ITEM_MAC, holder.mItem.getAddress());
+                            context.startActivity(intent);
+                        }
                     }
                 }
             });
