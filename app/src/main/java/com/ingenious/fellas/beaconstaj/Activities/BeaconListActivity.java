@@ -138,9 +138,8 @@ public class BeaconListActivity extends AppCompatActivity {
 
                         if (mBeacons.get(position).getIsNear()){
                             Intent intent = new Intent(BeaconListActivity.this, BeaconFinderActivity.class);
-                            intent.putExtra(BeaconDetailFragment.ARG_ITEM_NAME, holder.mItem.getName());
-                            intent.putExtra(BeaconDetailFragment.ARG_ITEM_MAC, holder.mItem.getAddress());
-
+                            intent.putExtra("mac", holder.mItem.getAddress());
+                            v.getContext().startActivity(intent);
                         }
                         else {
                             Log.i("asdf", holder.mItem.getName() + " " + holder.mItem.getAddress());

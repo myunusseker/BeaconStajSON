@@ -31,7 +31,7 @@ public class BeaconFinderActivity extends AppCompatActivity {
         mBeacon = Globals.getBeacon(mac);
         toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
         finderRssi = (TextView) findViewById(R.id.beacon_finder_rssi);
-        finderResult = (TextView) findViewById(R.id.beacon_finder_rssi);
+        finderResult = (TextView) findViewById(R.id.beacon_finder_result);
 
     }
 }
