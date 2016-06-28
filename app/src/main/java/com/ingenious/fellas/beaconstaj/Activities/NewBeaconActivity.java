@@ -122,7 +122,7 @@ public class NewBeaconActivity extends AppCompatActivity implements GoogleApiCli
                 Log.i("aaa","response null ");
             try {
                 if (response!= null && response.get("status_message").equals("success"))
-                    Log.i("aaa","adam konumu yolladik");
+                    Log.i("aaa","adam gibi konumu yolladik");
                 else {
                     Log.i("aaa", "adam gibi yollayamadik");
                     Log.i("aaa",response.toString());
