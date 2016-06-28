@@ -39,19 +39,11 @@ import java.util.HashMap;
  * item details are presented side-by-side with a list of items
  * in a {@link BeaconListActivity}.
  */
-public class BeaconDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
-
-    private GoogleMap mMap;
-    String latitude,longtitude;
-    MarkerOptions a = new MarkerOptions()
-            .position(new LatLng(50,6));
-    Marker m;
-
+public class BeaconDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        Log.i(Globals.TAG, "Beacon detail activity start");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beacon_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
@@ -59,7 +51,6 @@ public class BeaconDetailActivity extends AppCompatActivity implements OnMapRead
 
 
 
-        // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -73,32 +64,12 @@ public class BeaconDetailActivity extends AppCompatActivity implements OnMapRead
                     getIntent().getStringExtra(BeaconDetailFragment.ARG_ITEM_MAC));
             BeaconDetailFragment fragment = new BeaconDetailFragment();
             fragment.setArguments(arguments);
-            
-
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.maptoolbar);
-            mapFragment.getMapAsync(this);
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.beacon_detail_container, fragment)
                     .commit();
         }
-        new getLocationTask().execute(getIntent().getStringExtra(BeaconDetailFragment.ARG_ITEM_MAC));
 
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        m = mMap.addMarker(a);
-
-        //while(latitude == null);
-        // Add a marker in Sydney and move the camera
-        //LatLng place = new LatLng(Double.valueOf(latitude),Double.valueOf(longtitude));
-        //LatLng sydney = new LatLng(-34, 151);
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(m.getPosition()));
     }
 
     @Override
@@ -120,59 +91,5 @@ public class BeaconDetailActivity extends AppCompatActivity implements OnMapRead
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-    }
-
-
-
-    public class getLocationTask extends AsyncTask<String, Void, JSONObject> {
-
-        @Override
-        protected JSONObject doInBackground(String... params) {
-            HashMap<String, String> h = new HashMap<>();
-            h.put("mac", String.valueOf(params[0]));
-            JSONObject response = RequestHandler.sendPostRequest(Globals.URL + "getLocation.php", h);
-            try {
-                Log.i(Globals.TAG, response.getString("status_message"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Log.i(Globals.TAG, "response'u alamadik");
-            }
-
-            JSONObject obj = new JSONObject();
-            try {
-                if (response.getJSONObject("data") != null)
-                    obj = response.getJSONObject("data");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return obj;
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject jsonObject) {
-            if (jsonObject == null) return;
-
-            try {
-                latitude = jsonObject.getString("latitude");
-                longtitude = jsonObject.getString("longtitude");
-
-
-
-                m.setPosition(new LatLng(Double.valueOf(latitude),Double.valueOf(longtitude)));
-                LatLngBounds.Builder builder = new LatLngBounds.Builder().include(m.getPosition());
-                LatLngBounds latLngBounds = builder.build();
-
-                int padding = 15;
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds,padding);
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(m.getPosition()));
-                mMap.animateCamera(cameraUpdate);
-
-                Log.i("latlar", latitude);
-                Log.i("latlar", longtitude);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

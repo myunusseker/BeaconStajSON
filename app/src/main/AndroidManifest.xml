@@ -56,7 +56,8 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".Activities.MapShow" />
-        <activity android:name=".Activities.BeaconFinderActivity"></activity>
+        <activity android:name=".Activities.BeaconFinderActivity" />
+        <activity android:name=".Activities.BeaconMapActivity"></activity>
     </application>
 
 </manifest>

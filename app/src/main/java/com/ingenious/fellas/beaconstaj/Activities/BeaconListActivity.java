@@ -121,7 +121,18 @@ public class BeaconListActivity extends AppCompatActivity {
             holder.mContentView.setText(mBeacons.get(position).getAddress());
             if (!mBeacons.get(position).getIsNear())
                 holder.icon.setBackgroundResource(R.drawable.icon_map_black);
-
+            holder.icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!mBeacons.get(position).getIsNear()) {
+                        Context context = v.getContext();
+                        Intent intent = new Intent(context, BeaconMapActivity.class);
+                        intent.putExtra(BeaconDetailFragment.ARG_ITEM_NAME, holder.mItem.getName());
+                        intent.putExtra(BeaconDetailFragment.ARG_ITEM_MAC, holder.mItem.getAddress());
+                        context.startActivity(intent);
+                    }
+                }
+            });
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

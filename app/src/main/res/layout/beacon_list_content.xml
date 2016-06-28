@@ -39,6 +39,7 @@
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:background="@android:drawable/ic_menu_search"
         android:layout_alignParentRight="true" />
 
