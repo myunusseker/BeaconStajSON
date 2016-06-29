@@ -1,37 +1,14 @@
 package com.ingenious.fellas.beaconstaj.Activities;
 
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
-
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.ingenious.fellas.beaconstaj.Classes.Globals;
-import com.ingenious.fellas.beaconstaj.Classes.RequestHandler;
 import com.ingenious.fellas.beaconstaj.Fragments.BeaconDetailFragment;
-import com.ingenious.fellas.beaconstaj.Fragments.NewBeaconAddFragment;
 import com.ingenious.fellas.beaconstaj.R;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
 
 /**
  * An activity representing a single Beacon detail screen. This
@@ -69,7 +46,6 @@ public class BeaconDetailActivity extends AppCompatActivity {
                     .add(R.id.beacon_detail_container, fragment)
                     .commit();
         }
-
     }
 
     @Override

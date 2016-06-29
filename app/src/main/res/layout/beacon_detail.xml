@@ -15,22 +15,6 @@
         android:padding="16dp"
         android:textIsSelectable="true"
         />
-    <TextView
-        android:id="@+id/beacon_detail_rssi"
-        style="?android:attr/textAppearanceLarge"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textIsSelectable="true"
-        />
-    <TextView
-        android:id="@+id/beacon_detail_distance"
-        style="?android:attr/textAppearanceLarge"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textIsSelectable="true"
-        />
     <Button
         android:id="@+id/lost_button"
         android:layout_width="match_parent"
