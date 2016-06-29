@@ -22,7 +22,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_ENABLE_BT = 10;
-    private static int BLUETOOTH_CHANGED = 0;
     private boolean isConnected;
 
     @Override
@@ -48,19 +47,17 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             Log.i("Attempt to login", "" + REQUEST_ENABLE_BT);
         }
-        else
-        {
+        else {
             startApp();
         }
 
     }
 
     private void startBluetoothSearch() {
-        BluetoothAdapter BTAdapter;
         BluetoothLeScanner bluetoothLeScanner = BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner();
         ScanSettings settings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
         List<ScanFilter> filters = new ArrayList<ScanFilter>();
-        BTAdapter = BluetoothAdapter.getDefaultAdapter();
+        //BluetoothAdapter BTAdapter = BluetoothAdapter.getDefaultAdapter();
         bluetoothLeScanner.startScan(filters, settings, Globals.scanCallback);
     }
 
@@ -68,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_ENABLE_BT) {
-            BLUETOOTH_CHANGED = 1;
             if (resultCode == RESULT_OK) {
                 Log.i("Bluetooth acildi", "burada");
                 startApp();
