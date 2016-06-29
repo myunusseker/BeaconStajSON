@@ -9,10 +9,14 @@
         android:id="@+id/beacon_finder_rssi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_blank_fragment" />
+        android:text="@string/hello_blank_fragment"
+        android:gravity="center"
+        android:textSize="70sp"/>
     <TextView
         android:id="@+id/beacon_finder_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_blank_fragment" />
+        android:text="@string/hello_blank_fragment"
+        android:gravity="center"
+        android:textSize="50sp"/>
 </LinearLayout>
