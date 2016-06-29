@@ -131,6 +131,12 @@ public class BeaconListActivity extends AppCompatActivity {
                         intent.putExtra(BeaconDetailFragment.ARG_ITEM_MAC, holder.mItem.getAddress());
                         context.startActivity(intent);
                     }
+                    else
+                    {
+                        Intent intent = new Intent(BeaconListActivity.this, BeaconFinderActivity.class);
+                        intent.putExtra("mac", holder.mItem.getAddress());
+                        v.getContext().startActivity(intent);
+                    }
                 }
             });
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -146,20 +152,12 @@ public class BeaconListActivity extends AppCompatActivity {
                                 .replace(R.id.beacon_detail_container, fragment)
                                 .commit();
                     } else {
-
-                        if (mBeacons.get(position).getIsNear()){
-                            Intent intent = new Intent(BeaconListActivity.this, BeaconFinderActivity.class);
-                            intent.putExtra("mac", holder.mItem.getAddress());
-                            v.getContext().startActivity(intent);
-                        }
-                        else {
                             Log.i("asdf", holder.mItem.getName() + " " + holder.mItem.getAddress());
                             Context context = v.getContext();
                             Intent intent = new Intent(context, BeaconDetailActivity.class);
                             intent.putExtra(BeaconDetailFragment.ARG_ITEM_NAME, holder.mItem.getName());
                             intent.putExtra(BeaconDetailFragment.ARG_ITEM_MAC, holder.mItem.getAddress());
                             context.startActivity(intent);
-                        }
                     }
                 }
             });

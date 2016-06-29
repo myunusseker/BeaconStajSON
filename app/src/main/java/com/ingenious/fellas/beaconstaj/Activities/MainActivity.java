@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_ENABLE_BT = 10;
     private static int BLUETOOTH_CHANGED = 0;
+    private boolean isConnected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,44 +35,24 @@ public class MainActivity extends AppCompatActivity {
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
+        isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
         //attempt to open bluetooth
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
-            // Device does not support Bluetooth
+            Toast.makeText(this, "Your Device does not support Bluetooth LE", Toast.LENGTH_LONG).show();
         }
-        if (!mBluetoothAdapter.isEnabled()) {
-
-
+        else if (!mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             Log.i("Attempt to login", "" + REQUEST_ENABLE_BT);
-
         }
-        while (BLUETOOTH_CHANGED == 0) {
-
-        }
-        if (!mBluetoothAdapter.isEnabled()) {
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(1);
+        else
+        {
+            startApp();
         }
 
-        startBluetoothSearch();
-        Log.i("asdf", "main activity burasi");
-
-        if (!isConnected) {
-            Toast.makeText(this, "No internet connection", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (Globals.username.equals("nullUser")) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(intent);
-        } else {
-            Intent intent = new Intent(MainActivity.this, BeaconListActivity.class);
-            startActivity(intent);
-        }
     }
 
     private void startBluetoothSearch() {
@@ -81,8 +62,6 @@ public class MainActivity extends AppCompatActivity {
         List<ScanFilter> filters = new ArrayList<ScanFilter>();
         BTAdapter = BluetoothAdapter.getDefaultAdapter();
         bluetoothLeScanner.startScan(filters, settings, Globals.scanCallback);
-
-
     }
 
     @Override
@@ -92,9 +71,26 @@ public class MainActivity extends AppCompatActivity {
             BLUETOOTH_CHANGED = 1;
             if (resultCode == RESULT_OK) {
                 Log.i("Bluetooth acildi", "burada");
+                startApp();
             } else {
                 Log.i("Bluetooth", "Acilmadi");
+                finish();
             }
+        }
+    }
+    private void startApp()
+    {
+        startBluetoothSearch();
+        Log.i("asdf", "main activity burasi");
+        if (!isConnected) {
+            Toast.makeText(this, "No internet connection", Toast.LENGTH_LONG).show();
+        }
+        if (Globals.username.equals("nullUser")) {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(MainActivity.this, BeaconListActivity.class);
+            startActivity(intent);
         }
     }
 }
