@@ -34,4 +34,11 @@ public class BeaconFinderActivity extends AppCompatActivity {
         finderResult = (TextView) findViewById(R.id.beacon_finder_result);
 
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Globals.whichActivity = 3;
+        toneG.stopTone();
+    }
 }
