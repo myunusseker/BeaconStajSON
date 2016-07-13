@@ -19,7 +19,7 @@
         android:id="@+id/lost_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="KAYIP FALAN"/>
+        android:text="KAYIP / BULDUM"/>
 
     <Button
         android:id="@+id/map_or_find_button"
