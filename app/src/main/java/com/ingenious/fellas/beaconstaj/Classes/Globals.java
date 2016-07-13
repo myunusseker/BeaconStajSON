@@ -30,10 +30,10 @@ public class Globals {
     public static ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
+            int rssi = result.getRssi();
+            BluetoothDevice device = result.getDevice();
             if(whichActivity==1){
                 Log.i(TAG, "Bluetooth device found\n");
-                int rssi = result.getRssi();
-                BluetoothDevice device = result.getDevice();
                 Beacon newBeacon = new Beacon(device.getName(), device.getAddress(),rssi);
                 Log.i(TAG, "rssi degisimi: " + rssi + " MAC: " + newBeacon.getAddress());
 
@@ -56,8 +56,7 @@ public class Globals {
             }
             else if (whichActivity == 2){
                 Log.i("YUNUS", "Bluyo\n");
-                int rssi = result.getRssi();
-                String foundMac = result.getDevice().getAddress();
+                String foundMac = device.getAddress();
                 if(foundMac.equalsIgnoreCase(BeaconFinderActivity.mac)){
                     Log.i("YUNUS", String.valueOf(rssi));
 
@@ -73,8 +72,6 @@ public class Globals {
             }
             else if (whichActivity == 3){
                 Log.i(TAG, "Bluetooth device found\n");
-                int rssi = result.getRssi();
-                BluetoothDevice device = result.getDevice();
                 Beacon newBeacon = new Beacon(device.getName(), device.getAddress(),rssi);
                 Log.i(TAG, "rssi degisimi: " + rssi + " MAC: " + newBeacon.getAddress());
 
