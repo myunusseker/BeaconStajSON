@@ -102,7 +102,6 @@ public class BeaconDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int a = 1 - isWanted;
-                Log.i("hello",String.valueOf(a));
                 new setWantedTask().execute(mBeacon.getAddress(),String.valueOf(a));
             }
         });
@@ -140,7 +139,10 @@ public class BeaconDetailFragment extends Fragment {
             try {
                 String str = jsonObject.getString("isWanted");
                 isWanted = Integer.valueOf(str);
-                Log.i("hello", "isWanted: " + isWanted);
+                if(isWanted==1)
+                    lostButton.setText("BULDUM, ILANI KALDIR");
+                else
+                    lostButton.setText("KAYIP ILANI VER");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
