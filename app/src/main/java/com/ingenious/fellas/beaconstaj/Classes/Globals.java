@@ -33,7 +33,7 @@ public class Globals {
             int rssi = result.getRssi();
             BluetoothDevice device = result.getDevice();
             if(whichActivity==1){
-                Log.i(TAG, "Bluetooth device found\n");
+                Log.i(TAG, "Bluetooth device found w=1");
                 Beacon newBeacon = new Beacon(device.getName(), device.getAddress(),rssi);
                 Log.i(TAG, "rssi degisimi: " + rssi + " MAC: " + newBeacon.getAddress());
 
@@ -43,6 +43,8 @@ public class Globals {
                         beacon.setRssi(newBeacon.getRssi());
                         beaconExist = true;
                         NewBeaconActivity.mAdapter.notifyDataSetChanged();
+                        new NewBeaconActivity.sendLocationTask().execute(beacon);
+                        break;
                     }
                 }
                 if(!beaconExist) {
@@ -71,7 +73,7 @@ public class Globals {
                 }
             }
             else if (whichActivity == 3){
-                Log.i(TAG, "Bluetooth device found\n");
+                Log.i(TAG, "Bluetooth device found w=3");
                 Beacon newBeacon = new Beacon(device.getName(), device.getAddress(),rssi);
                 Log.i(TAG, "rssi degisimi: " + rssi + " MAC: " + newBeacon.getAddress());
 
@@ -80,6 +82,7 @@ public class Globals {
                     if(beacon.getAddress().equalsIgnoreCase(newBeacon.getAddress())){
                         beacon.setRssi(newBeacon.getRssi());
                         beaconExist = true;
+                        break;
                     }
                 }
                 if(!beaconExist) {
