@@ -51,6 +51,7 @@ public class NewBeaconActivity extends AppCompatActivity implements GoogleApiCli
 
     @Override
     protected void onStop() {
+        Globals.whichActivity = 3;
         mGoogleApiClient.disconnect();
         Log.i("aaa","mGoogleApiClient disconnected");
         super.onStop();
@@ -78,6 +79,7 @@ public class NewBeaconActivity extends AppCompatActivity implements GoogleApiCli
 
     @Override
     public void onBackPressed() {
+        Globals.whichActivity = 3;
         super.onBackPressed();
     }
 

@@ -45,7 +45,6 @@ public class Globals {
                         beacon.setRssi(newBeacon.getRssi());
                         beaconExist = true;
                         NewBeaconActivity.mAdapter.notifyDataSetChanged();
-                        new NewBeaconActivity.sendLocationTask().execute(beacon);
                         break;
                     }
                 }
@@ -89,7 +88,10 @@ public class Globals {
                 }
                 if(!beaconExist) {
                     Log.i(TAG, "Add yapmadan once");
-                    beaconsAround.add(newBeacon);
+                    if (!Globals.doesBeaconsExists(newBeacon.getAddress())){
+                        beaconsAround.add(newBeacon);
+                        new NewBeaconActivity.sendLocationTask().execute(newBeacon);
+                    }
                 }
             }
         }
