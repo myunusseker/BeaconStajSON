@@ -117,6 +117,8 @@ public class NewBeaconActivity extends AppCompatActivity implements GoogleApiCli
             Log.i("aaa", String.valueOf(mLastLocation.getLongitude()));
             hashMap.put("latitude", String.valueOf(mLastLocation.getLatitude()));
             hashMap.put("longtitude", String.valueOf(mLastLocation.getLongitude()));
+            hashMap.put("lastseen", Globals.getCurrentTimeStamp());
+            Log.i("time",Globals.getCurrentTimeStamp());
             JSONObject response = RequestHandler.sendPostRequest(Globals.URL + "addLocation.php", hashMap);
             if (response == null)
                 Log.i("aaa","response null ");

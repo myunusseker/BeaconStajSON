@@ -14,7 +14,9 @@ import com.ingenious.fellas.beaconstaj.Activities.BeaconFinderActivity;
 import com.ingenious.fellas.beaconstaj.Activities.NewBeaconActivity;
 import com.ingenious.fellas.beaconstaj.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -119,6 +121,20 @@ public class Globals {
                 return myBeacons.get(i);
         }
         return null;
+    }
+
+    public static String getCurrentTimeStamp(){
+        try {
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String currentTimeStamp = dateFormat.format(new Date()); // Find todays date
+
+            return currentTimeStamp;
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return null;
+        }
     }
 
 }
